@@ -1,0 +1,67 @@
+
+To enable sqoop connection to RDS
+sudo -i 
+wget https://de-mysql-connector.s3.amazonaws.com/mysql-connector-java-8.0.25.tar.gz
+tar -xvf mysql-connector-java-8.0.25.tar.gz
+cd mysql-connector-java-8.0.25/
+sudo cp mysql-connector-java-8.0.25.jar /usr/lib/sqoop/lib/
+
+
+
+Use sqoop to import table from RDS to Hive:
+
+sqoop import \
+--connect jdbc:mysql://upgradawsrds1.cyaielc9bmnf.us-east-1.rds.amazonaws.com/cred_financials_data \
+--table card_member \
+--username upgraduser --password upgraduser \
+--hive-import \
+--hive-table card_member \
+--create-hive-table \
+--fields-terminated-by ',' \
+-m 1
+
+
+sqoop import \
+--connect jdbc:mysql://upgradawsrds1.cyaielc9bmnf.us-east-1.rds.amazonaws.com/cred_financials_data \
+--table member_score \
+--username upgraduser --password upgraduser \
+--hive-import \
+--hive-table member_score \
+--create-hive-table \
+--fields-terminated-by ',' \
+-m 1
+
+
+copy csv file to hadoop:
+hadoop fs -put card_transactions.csv /user/hadoop/
+
+
+Install Happybase:
+sudo yum update
+yum install gcc
+sudo yum install python3-devel
+pip install happybase
+
+Run below as root user
+check if thrift server running:
+jps
+If not running:
+hbase thrift start
+
+
+Set HBase - Hive integration:
+Run the following in hbase shell:
+grant 'hue' ,'RWXCA'
+
+
+-- Note: Before creating any table, make sure you run this command in Hive cli only
+Add jar /usr/lib/hive-hcatalog/share/hcatalog/hive-hcatalog-core-2.3.6-amzn-2.jar;
+
+
+Run the Hive_commands.sql file in Hue
+
+
+now check if records are written to the hbase table:
+scan 'hbase_lookup_table'
+
+

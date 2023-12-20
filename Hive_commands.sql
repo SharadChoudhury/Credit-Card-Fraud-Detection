@@ -3,7 +3,7 @@
 -- card_member and member_score are internal tables created by sqoop
 
 -- transactions Data Table schema creation
-CREATE EXTERNAL TABLE card_transactions (
+CREATE TABLE card_transactions (
     card_id STRING,
     member_id STRING,
     amount DOUBLE,
@@ -15,8 +15,9 @@ CREATE EXTERNAL TABLE card_transactions (
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
-LOCATION '/user/hive/warehouse/card_transactions'
 TBLPROPERTIES ("skip.header.line.count"="1");
+
+--LOCATION '/user/hive/warehouse/card_transactions'
 
 
 -- load data into it from the csv file

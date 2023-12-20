@@ -32,10 +32,7 @@ sqoop import \
 -m 1
 
 
-copy csv file to hadoop:
-hadoop fs -put card_transactions.csv /user/hadoop/
-
-
+---------------------------------------------------------------------------
 Install Happybase:
 sudo yum update
 yum install gcc
@@ -48,7 +45,7 @@ jps
 If not running:
 hbase thrift start
 
-
+----------------------------------------------------------------------------
 Set HBase - Hive integration:
 Run the following in hbase shell:
 grant 'hue' ,'RWXCA'
@@ -56,6 +53,14 @@ grant 'hue' ,'RWXCA'
 
 -- Note: Before creating any table, make sure you run this command in Hive cli only
 Add jar /usr/lib/hive-hcatalog/share/hcatalog/hive-hcatalog-core-2.3.6-amzn-2.jar;
+
+
+Load data from card_transactions.csv file to HBase:
+Run the copy_to_Hbase.py
+
+
+copy csv file to hadoop:
+hadoop fs -put card_transactions.csv /user/hadoop/
 
 
 Run the Hive_commands.sql file in Hue

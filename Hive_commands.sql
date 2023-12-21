@@ -85,6 +85,8 @@ insert overwrite table hive_lookup_table
 SELECT * FROM genuine_transactions;
 
 
+----------------------------------------------------------------------------------------
+
 -- mapping transactions table to hbase table
 CREATE TABLE hive_card_transactions(
     card_id STRING,

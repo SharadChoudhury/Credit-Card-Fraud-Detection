@@ -63,7 +63,8 @@ def batch_insert_data(filename):
             i+=1
 
     file.close()
-    print("batch insert done, {} lines inserted".format(i-1))
+    print("File written to HBase")
+    # print("batch insert done, {} lines inserted".format(i-1))
     
     close_connection()
 

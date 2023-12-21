@@ -1,7 +1,7 @@
 import happybase
 
 #create connection
-connection = happybase.Connection('localhost', port=9090 ,autoconnect=False)
+connection = happybase.Connection(host='localhost', port=9090 ,autoconnect=False)
 
 #open connection to perform operations
 def open_connection():

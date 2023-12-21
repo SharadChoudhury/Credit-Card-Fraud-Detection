@@ -70,3 +70,8 @@ now check if records are written to the hbase table:
 scan 'hbase_lookup_table'
 
 
+Create a HBase table:
+create 'card_transactions', 'cf1'
+
+Run the copy_to_hbase.py
+

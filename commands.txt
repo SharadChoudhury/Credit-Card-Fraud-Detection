@@ -1,3 +1,28 @@
+Transfer csv file to emr:
+scp -i my-pair1.pem Credit-Card-Fraud-Detection/card_transactions.csv hadoop@ec2-34-226-138-78.compute-1.amazonaws.com:/home/hadoop
+
+Install Happybase:
+sudo -i
+sudo yum update
+yum install gcc
+sudo yum install python3-devel
+pip install happybase
+
+Run below as root user
+check if thrift server running:
+jps
+If not running:
+hbase thrift start
+
+
+Create a HBase table: 
+hbase shell
+create 'card_transactions', 'cf1'
+
+
+Run the copy_to_hbase.py 
+
+---------------------------------------------------------------------------
 
 To enable sqoop connection to RDS
 sudo -i 
@@ -32,31 +57,14 @@ sqoop import \
 -m 1
 
 
----------------------------------------------------------------------------
-Install Happybase:
-sudo yum update
-yum install gcc
-sudo yum install python3-devel
-pip install happybase
-
-Run below as root user
-check if thrift server running:
-jps
-If not running:
-hbase thrift start
-
 ----------------------------------------------------------------------------
 Set HBase - Hive integration:
 Run the following in hbase shell:
-grant 'hue' ,'RWXCA'
+grant 'hue' ,'RWXCA' (ignore even if it throws any errors)
 
 
 -- Note: Before creating any table, make sure you run this command in Hive cli only
 Add jar /usr/lib/hive-hcatalog/share/hcatalog/hive-hcatalog-core-2.3.6-amzn-2.jar;
-
-
-Load data from card_transactions.csv file to HBase:
-Run the copy_to_Hbase.py
 
 
 copy csv file to hadoop:
@@ -67,11 +75,18 @@ Run the Hive_commands.sql file in Hue
 
 
 now check if records are written to the hbase table:
+list : see if table appears in list output
 scan 'hbase_lookup_table'
 
 
-Create a HBase table:
-create 'card_transactions', 'cf1'
+To drop table:
+disable 'table'
+drop 'table'
+------------------------------------------------------------------------------
 
-Run the copy_to_hbase.py
+export SPARK_KAFKA_VERSION=0.10
+
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 ingest_from_kafka.py
+
+
 

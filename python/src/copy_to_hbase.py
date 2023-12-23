@@ -42,7 +42,8 @@ def batch_insert_data(filename):
     table = get_table()
     lastrow = getlastrow(table)   # getting the last row id from the Hbase table
     i = lastrow 
-    cols = ['card_id','member_id','amount','postcode','pos_id','transaction_dt','status']
+    #cols = ['card_id','member_id','amount','postcode','pos_id','transaction_dt','status']
+    cols = []
 
     print("starting batch insert of events")
 
@@ -55,16 +56,14 @@ def batch_insert_data(filename):
                 for j in range(len(cols)):
                     b.put(row_key, {b'cf1:' + cols[j].encode(): temp[j].encode()})
 
-                print('inserted {}th line'.format(i))
-
             else:       # if row is header, fetch the column names and store in cols
                 cols = line.strip().split(",")       
 
             i+=1
 
     file.close()
-    print("File written to HBase")
-    # print("batch insert done, {} lines inserted".format(i-1))
+    print("File written to Hbase")
+
     
     close_connection()
 

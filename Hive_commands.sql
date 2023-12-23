@@ -17,15 +17,8 @@ FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 TBLPROPERTIES ("skip.header.line.count"="1");
 
---LOCATION '/user/hive/warehouse/card_transactions'
-
-
 -- load data into it from the csv file
 LOAD DATA INPATH '/user/hadoop/card_transactions.csv' INTO TABLE card_transactions;
-
-select * from card_transactions limit 5;
-
-
 
 -- Creating the lookup table in Hive:
 -- Create a temporary table with moving average and standard deviation:
@@ -51,7 +44,6 @@ FROM
     ) as b
 WHERE rn <= 10;
 
-
 -- Create the final lookup table
 CREATE TABLE genuine_transactions AS
 SELECT
@@ -65,7 +57,6 @@ left join
 member_score m
 ON t.member_id = m.member_id
 WHERE rn = 1;
-
 
 -- mapping hive table to hbase table:
 create table hive_lookup_table(
@@ -84,5 +75,3 @@ TBLPROPERTIES ("hbase.table.name" = "hbase_lookup_table");
 insert overwrite table hive_lookup_table
 SELECT * FROM genuine_transactions;
 
-
-----------------------------------------------------------------------------------------

@@ -86,21 +86,3 @@ SELECT * FROM genuine_transactions;
 
 
 ----------------------------------------------------------------------------------------
-
--- mapping transactions table to hbase table
-CREATE TABLE hive_card_transactions(
-    card_id STRING,
-    member_id STRING,
-    amount DOUBLE,
-    postcode INT,
-    pos_id STRING,
-    transaction_dt STRING,
-    status STRING
-)
-STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
-WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key,cf1:member_id,cf1:amount,cf1:postcode,cf1:pos_id,
-cf1:transaction_dt,cf1:status")
-TBLPROPERTIES ("hbase.table.name" = "hbase_card_transactions");
-
-insert overwrite table hive_card_transactions
-SELECT * FROM card_transactions;

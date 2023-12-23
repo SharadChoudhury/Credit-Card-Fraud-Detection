@@ -4,7 +4,7 @@ import sys
 ### Setting up the Python consumer
 bootstrap_servers = ['18.211.252.152:9092']
 topicName = 'transactions-topic-verified'
-consumer = KafkaConsumer (topicName,bootstrap_servers = bootstrap_servers, auto_offset_reset = 'earliest')   
+consumer = KafkaConsumer (topicName,bootstrap_servers = bootstrap_servers, auto_offset_reset = 'latest')   
 ## auto_offset_reset = earliest : read messages from the oldest messages
 ## auto_offset_reset = latest : read from the last message since consumer started listening
 

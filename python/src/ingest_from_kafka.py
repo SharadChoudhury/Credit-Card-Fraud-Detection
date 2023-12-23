@@ -38,7 +38,7 @@ parsed_trans = lines.selectExpr("cast(value as string) as json_value") \
 
 
 #Write to Console
-query = lines \
+query = parsed_trans \
     .writeStream \
     .outputMode("append") \
     .format("console") \

@@ -16,17 +16,18 @@ lines = spark \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "18.211.252.152:9092") \
     .option("subscribe", "transactions-topic-verified") \
+    .option("startingOffsets", "earliest") \
+    .option("maxOffsetsPerTrigger", 20) \
     .load()
 
-    # .option("startingOffsets", "earliest") \
-    # .option("maxOffsetsPerTrigger", 100) \
+
 
 tran_schema = StructType([
     StructField("card_id", StringType(), True),
     StructField("member_id", StringType(), True),
     StructField("amount", DoubleType(), True),
     StructField("pos_id", StringType(), True),
-    StructField("postcode", IntegerType(), True),
+    StructField("postcode", StringType(), True),
     StructField("transaction_dt", StringType(), True),
 ])
 

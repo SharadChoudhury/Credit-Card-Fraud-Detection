@@ -7,7 +7,7 @@ CREATE TABLE card_transactions (
     card_id STRING,
     member_id STRING,
     amount DOUBLE,
-    postcode INT,
+    postcode STRING,
     pos_id STRING,
     transaction_dt STRING,
     status STRING

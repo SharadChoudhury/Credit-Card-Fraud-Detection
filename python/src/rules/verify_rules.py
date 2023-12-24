@@ -37,7 +37,7 @@ def checkDistance(curr_card_id, postcode, transaction_dt):
     hour_diff = (curr_timestamp - prev_timestamp).total_seconds() / 3600
 
     # assuming 900km/h as the max speed of passenger air travel
-    if distance/hour_diff < 900:
+    if distance/hour_diff <= 900:
         return True
     else:
         return False

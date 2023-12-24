@@ -11,7 +11,6 @@ def open_connection():
 def close_connection():
     connection.close()
 
-
 #get the pointer to a table
 def get_table():
     # print(connection.tables())

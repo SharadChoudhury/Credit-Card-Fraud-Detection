@@ -47,11 +47,6 @@ query = parsed_trans \
     .option("truncate", "false") \
     .start() 
 
-# Since hive_lookup_table is mapped to hbase_lookup_table, we will read and update the hive_lookup_table only
-lookup = spark.sql('''
-select * from hive_lookup_table
-''')
-
 
 
 query.awaitTermination()

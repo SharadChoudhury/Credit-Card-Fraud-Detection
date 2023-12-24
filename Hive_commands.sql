@@ -15,7 +15,7 @@ CREATE TABLE card_transactions (
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
-TBLPROPERTIES ("skip.header.line.count"="1");
+TBLPROPERTIES ("skip.header.line.count"="1") ;
 
 -- load data into it from the csv file
 LOAD DATA INPATH '/user/hadoop/card_transactions.csv' INTO TABLE card_transactions;
@@ -42,7 +42,7 @@ FROM
         WHERE status = 'GENUINE'
         ) AS a
     ) as b
-WHERE rn <= 10;
+WHERE rn <= 10 ;
 
 -- Create the final lookup table
 CREATE TABLE genuine_transactions AS
@@ -56,7 +56,7 @@ FROM temp_transactions t
 left join 
 member_score m
 ON t.member_id = m.member_id
-WHERE rn = 1;
+WHERE rn = 1 ;
 
 -- mapping hive table to hbase table:
 create table hive_lookup_table(
@@ -69,7 +69,7 @@ create table hive_lookup_table(
 STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
 WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key,cf1:last_postcode,cf1:last_transaction_dt,
 cf1:credit_score,cf1:ucl")
-TBLPROPERTIES ("hbase.table.name" = "hbase_lookup_table");
+TBLPROPERTIES ("hbase.table.name" = "hbase_lookup_table") ;
 
 -- inserting records to hive_lookup_table automatically inserts to hbase_lookup_table
 insert overwrite table hive_lookup_table

@@ -18,11 +18,10 @@ lines = spark \
     .option("kafka.bootstrap.servers", "18.211.252.152:9092") \
     .option("subscribe", "transactions-topic-verified") \
     .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", 500) \
+    .option("maxOffsetsPerTrigger", 20) \
     .load()
 
-
-
+# set schema for stream
 tran_schema = StructType([
     StructField("card_id", StringType(), True),
     StructField("member_id", StringType(), True),
@@ -46,7 +45,5 @@ query = parsed_trans \
     .format("console") \
     .option("truncate", "false") \
     .start() 
-
-
 
 query.awaitTermination()

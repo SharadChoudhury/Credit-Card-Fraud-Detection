@@ -2,9 +2,10 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from db import dao
-from rules.verify_rules import rule_check
+from rules import verify_rules
 
 hbase_instance = dao.HBaseDao.get_instance()
+rules_instance = verify_rules.verifyRules.get_instance()
 
 spark = SparkSession \
     .builder \
@@ -24,8 +25,7 @@ lines = spark \
     .option("maxOffsetsPerTrigger", 500) \
     .load()
 
-
-
+# set schema for stream
 tran_schema = StructType([
     StructField("card_id", StringType(), True),
     StructField("member_id", StringType(), True),
@@ -42,7 +42,7 @@ parsed_trans = lines.selectExpr("cast(value as string) as json_value") \
             "from_unixtime(unix_timestamp(tran_data.transaction_dt, 'dd-MM-yyyy HH:mm:ss')) as transaction_dt")
 
 # create a udf with rule_check method from verify_rules.py
-status_udf = udf(rule_check, StringType())
+status_udf = udf(rules_instance.rule_check, StringType())
 
 # apply the udf on each row in the stream, and create a new column status
 status_df = parsed_trans.withColumn("status", status_udf("card_id", "amount", "postcode", "transaction_dt"))

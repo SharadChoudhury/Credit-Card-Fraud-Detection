@@ -2,7 +2,7 @@ Transfer csv file to emr:
 scp -i my-pair1.pem Credit-Card-Fraud-Detection/card_transactions.csv hadoop@ec2-34-226-138-78.compute-1.amazonaws.com:/home/hadoop
 
 Install Happybase:
-sudo -i
+sudo su
 sudo yum update
 yum install gcc
 sudo yum install python3-devel
@@ -26,7 +26,7 @@ Run the copy_to_hbase.py
 ---------------------------------------------------------------------------
 
 To enable sqoop connection to RDS
-sudo -i 
+sudo su
 wget https://de-mysql-connector.s3.amazonaws.com/mysql-connector-java-8.0.25.tar.gz
 tar -xvf mysql-connector-java-8.0.25.tar.gz
 cd mysql-connector-java-8.0.25/
@@ -65,7 +65,7 @@ grant 'hue' ,'RWXCA' (ignore even if it throws any errors)
 
 
 -- Note: Before creating any table, make sure you run this command in Hive cli only
-Add jar /usr/lib/hive-hcatalog/share/hcatalog/hive-hcatalog-core-2.3.6-amzn-2.jar;
+Add jar /usr/lib/hive-hcatalog/share/hcatalog/hive-hcatalog-core-2.3.6-amzn-2.jar ;
 
 
 copy csv file to hadoop:

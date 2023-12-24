@@ -13,6 +13,7 @@ class HBaseDao:
 			HBaseDao()
 		return HBaseDao.__instance
 
+
 	def __init__(self):
 		if HBaseDao.__instance != None:
 			raise Exception("This class is a singleton!")
@@ -41,7 +42,6 @@ class HBaseDao:
 					return row
 			except:
 				self.reconnect()
-
 
 
 	def write_data(self, key, row, table):

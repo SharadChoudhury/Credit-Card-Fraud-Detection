@@ -83,6 +83,10 @@ scan 'hbase_lookup_table'
 To drop table:
 disable 'table'
 drop 'table'
+
+
+Records till 11-02-2018 in csv 
+Records from 12-02-2018 in kafka
 ------------------------------------------------------------------------------
 
 export SPARK_KAFKA_VERSION=0.10

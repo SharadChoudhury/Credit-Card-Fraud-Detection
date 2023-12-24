@@ -6,6 +6,7 @@ from pyspark.sql.types import *
 spark = SparkSession \
     .builder \
     .appName("KafkaRead") \
+    .enableHiveSupport() \
     .getOrCreate()
 
 spark.sparkContext.setLogLevel('ERROR')
@@ -17,7 +18,7 @@ lines = spark \
     .option("kafka.bootstrap.servers", "18.211.252.152:9092") \
     .option("subscribe", "transactions-topic-verified") \
     .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", 20) \
+    .option("maxOffsetsPerTrigger", 500) \
     .load()
 
 
@@ -45,7 +46,11 @@ query = parsed_trans \
     .format("console") \
     .option("truncate", "false") \
     .start() 
-#     .trigger(processingTime="30 seconds") \
+
+# Since hive_lookup_table is mapped to hbase_lookup_table, we will read and update the hive_lookup_table only
+lookup = spark.sql('''
+select * from hive_lookup_table
+''')
 
 
 

@@ -24,13 +24,14 @@ class GEO_Map():
 			self.map = pd.read_csv("uszipsv.csv", header=None, names=['A',"B",'C','D','E'])
 			self.map['A'] =  self.map['A'].astype(str)
 
-	def get_lat(self, pos_id):
-		return self.map[self.map.A == pos_id ].B.iloc[0]
+	def get_lat(self, postcode):
+		return self.map[self.map.A == postcode ].B.iloc[0]
 
-	def get_long(self, pos_id):
-		return self.map[self.map.A == pos_id ].C.iloc[0]
+	def get_long(self, postcode):
+		return self.map[self.map.A == postcode ].C.iloc[0]
 
 	def distance(self, lat1, long1, lat2, long2):
+		# returns distance in Km
 		print(lat1, long1, lat2, long2)
 		theta = long1 - long2
 		dist = math.sin(self.deg2rad(lat1)) * math.sin(self.deg2rad(lat2)) + math.cos(self.deg2rad(lat1)) * math.cos(self.deg2rad(lat2)) * math.cos(self.deg2rad(theta))

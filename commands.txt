@@ -92,6 +92,3 @@ Records from 12-02-2018 in kafka
 export SPARK_KAFKA_VERSION=0.10
 
 spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 ingest_from_kafka.py
-
-
-

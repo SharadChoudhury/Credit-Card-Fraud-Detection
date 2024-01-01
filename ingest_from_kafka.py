@@ -18,7 +18,7 @@ lines = spark \
     .option("kafka.bootstrap.servers", "18.211.252.152:9092") \
     .option("subscribe", "transactions-topic-verified") \
     .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", 20) \
+    .option("maxOffsetsPerTrigger", 200) \
     .load()
 
 # set schema for stream

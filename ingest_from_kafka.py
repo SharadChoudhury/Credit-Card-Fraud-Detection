@@ -6,7 +6,6 @@ from pyspark.sql.types import *
 spark = SparkSession \
     .builder \
     .appName("KafkaRead") \
-    .enableHiveSupport() \
     .getOrCreate()
 
 spark.sparkContext.setLogLevel('ERROR')
@@ -18,7 +17,7 @@ lines = spark \
     .option("kafka.bootstrap.servers", "18.211.252.152:9092") \
     .option("subscribe", "transactions-topic-verified") \
     .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", 200) \
+    .option("maxOffsetsPerTrigger", 20) \
     .load()
 
 # set schema for stream

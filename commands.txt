@@ -1,5 +1,5 @@
 Transfer csv file to emr:
-scp -i my-pair1.pem Credit-Card-Fraud-Detection/card_transactions.csv hadoop@ec2-54-172-183-196.compute-1.amazonaws.com:/home/hadoop
+scp -i my-pair1.pem Credit-Card-Fraud-Detection/card_transactions.csv hadoop@ec2-18-208-250-121.compute-1.amazonaws.com:/home/hadoop
 
 Install Happybase:
 sudo su
@@ -7,6 +7,8 @@ sudo yum update
 yum install gcc
 sudo yum install python3-devel
 pip install happybase
+pip install pandas
+
 pip install kafka-python
 
 Run below as root user
@@ -92,4 +94,6 @@ Records from 12-02-2018 in kafka
 
 export SPARK_KAFKA_VERSION=0.10
 
-spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 test_driver.py
+spark-submit --py-files dao.py,geo_map.py,verify_rules.py --files uszipsv.csv --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 test_driver.py
+
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 ingest_from_kafka.py

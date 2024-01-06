@@ -33,6 +33,7 @@ class verifyRules():
             decoded_data[decoded_key] = decoded_value
         return decoded_data
 
+
     def check_ucl(self, curr_card_id, curr_amt):
         lookup_data = self.dao_obj.get_data(curr_card_id, 'hbase_lookup_table')
         decoded_data = self.decode_items(lookup_data)
@@ -64,12 +65,11 @@ class verifyRules():
         prev_long = self.geo_obj.get_long(decoded_data.get('cf1:last_postcode'))
         distance = self.geo_obj.distance(curr_lat,curr_long, prev_lat, prev_long)
         curr_timestamp = datetime.strptime(transaction_dt, '%Y-%m-%d %H:%M:%S')
-        #curr_timestamp = transaction_dt
         prev_timestamp = datetime.strptime(decoded_data.get('cf1:last_transaction_dt'), '%Y-%m-%d %H:%M:%S')
         sec_diff = (curr_timestamp - prev_timestamp).total_seconds() 
 
         # assuming 900km/h (or 250m/s) as the max speed of passenger air travel
-        if (distance*1000)/sec_diff <= 250:
+        if sec_diff != 0 and (distance*1000)/sec_diff <= 250:
             return True
         else:
             return False

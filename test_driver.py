@@ -10,7 +10,6 @@ rules_instance = verify_rules.verifyRules.get_instance()
 spark = SparkSession \
     .builder \
     .appName("KafkaRead") \
-    .enableHiveSupport() \
     .getOrCreate()
 
 spark.sparkContext.setLogLevel('ERROR')
@@ -22,7 +21,7 @@ lines = spark \
     .option("kafka.bootstrap.servers", "18.211.252.152:9092") \
     .option("subscribe", "transactions-topic-verified") \
     .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", 20) \
+    .option("maxOffsetsPerTrigger", 500) \
     .load()
 
 # set schema for stream
@@ -47,11 +46,10 @@ status_udf = udf(rules_instance.rule_check, StringType())
 # apply the udf on each row in the stream, and create a new column status
 status_df = parsed_trans.withColumn("status", status_udf("card_id", "amount", "postcode", "transaction_dt"))
 
-# # write the transactions to card_transcations table in HBase
-# def write_to_hbase(batch_df):
+# write the transactions to card_transcations table in HBase
+# def write_to_hbase(batch_df, batch_id):
 #     batch_df \
-#     .foreach(lambda row: hbase_instance \
-#     .write_data(
+#     .foreach(lambda row: hbase_instance.write_data(
 #         f"{row.card_id}_{row.amount}_{row.transaction_dt}".encode(),
 #         {   b'cf1:member_id': row.member_id.encode(), 
 #             b'cf1:postcode': row.postcode.encode(),
@@ -61,14 +59,27 @@ status_df = parsed_trans.withColumn("status", status_udf("card_id", "amount", "p
 #         'card_transactions'
 #     ))
 
-#Write to Console
+
+# Write to Console
+# query = status_df \
+#     .writeStream \
+#     .foreachBatch(write_to_hbase) \
+#     .outputMode("append") \
+#     .format("console") \
+#     .option("truncate", "false") \
+#     .start() 
+
+
+# Write to CSV
 query = status_df \
     .writeStream \
+    .format("csv") \
+    .option("path", "/user/hadoop/new_trans") \
+    .option("header", True) \
+    .option("checkpointLocation", "/user/hadoop/checkpoint") \
     .outputMode("append") \
-    .format("console") \
-    .option("truncate", "false") \
-    .start() 
-#     .foreachBatch(write_to_hbase) \
+    .start()
+
 query.awaitTermination()
 
 

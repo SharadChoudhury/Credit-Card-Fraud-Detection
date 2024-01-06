@@ -51,7 +51,7 @@ SELECT
     postcode AS last_postcode,
     transaction_dt AS last_transaction_dt,
     score AS credit_score,
-    ROUND(moving_avg + 3*std_dev, 2) as ucl
+    ROUND(CAST((moving_avg + 3*std_dev) as DECIMAL(10, 2)), 2) as ucl
 FROM temp_transactions t 
 left join 
 member_score m
@@ -64,7 +64,7 @@ create table hive_lookup_table(
     `last_postcode` string, 
     `last_transaction_dt` string,
     `credit_score` INT,
-    `ucl` DOUBLE
+    `ucl` DECIMAL(10, 2)
 )
 STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
 WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key,cf1:last_postcode,cf1:last_transaction_dt,

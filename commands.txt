@@ -1,5 +1,5 @@
 Transfer csv file to emr:
-scp -i my-pair1.pem Credit-Card-Fraud-Detection/card_transactions.csv hadoop@ec2-34-226-138-78.compute-1.amazonaws.com:/home/hadoop
+scp -i my-pair1.pem Credit-Card-Fraud-Detection/card_transactions.csv hadoop@ec2-54-172-183-196.compute-1.amazonaws.com:/home/hadoop
 
 Install Happybase:
 sudo su
@@ -60,11 +60,12 @@ sqoop import \
 
 ----------------------------------------------------------------------------
 Set HBase - Hive integration:
-Run the following in hbase shell:
+
+Run the following in hbase shell: 
+Do this only if you are running the Hive commands using Hue otherwise not required
 grant 'hue' ,'RWXCA' (ignore even if it throws any errors)
 
-
--- Note: Before creating any table, make sure you run this command in Hive cli only
+-- Note: Before creating any table, make sure you run this command in Hive cli only (optional)
 Add jar /usr/lib/hive-hcatalog/share/hcatalog/hive-hcatalog-core-2.3.6-amzn-2.jar ;
 
 
@@ -91,4 +92,4 @@ Records from 12-02-2018 in kafka
 
 export SPARK_KAFKA_VERSION=0.10
 
-spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 ingest_from_kafka.py
+spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 test_driver.py

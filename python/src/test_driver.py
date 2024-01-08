@@ -1,8 +1,8 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
-import dao
-import verify_rules 
+from db import dao
+from rules import verify_rules 
 
 hbase_instance = dao.HBaseDao.get_instance()
 rules_instance = verify_rules.verifyRules.get_instance()

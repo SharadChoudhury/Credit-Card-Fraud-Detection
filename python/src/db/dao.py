@@ -1,5 +1,6 @@
 import happybase
 
+
 class HBaseDao:
 	"""
 	Dao class for operation on HBase

@@ -106,7 +106,6 @@ Records from 12-02-2018 in kafka
 #         'card_transactions'
 #     ))
 
-
 # Write to Console
 # query = status_df \
 #     .writeStream \
@@ -117,12 +116,11 @@ Records from 12-02-2018 in kafka
 #     .start() 
 
 
+Actual execution:
+unzip python.zip
+cd python/src
+zip src.zip __init__.py rules/* db/*
+
 export SPARK_KAFKA_VERSION=0.10
-
-spark-submit --py-files dao.py,geo_map.py,verify_rules.py --files uszipsv.csv --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 driver.py
-
-spark-submit --py-files copy_to_hbase.py read_new_trans.py
-
-
-
 spark-submit --py-files src.zip --files uszipsv.csv --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 driver.py
+spark-submit --py-files copy_to_hbase.py read_new_trans.py

@@ -1,6 +1,5 @@
-import dao, geo_map
 from datetime import datetime
-from scripts.src.db import dao, geo_map
+from src.db import dao, geo_map
 
 
 class verifyRules():

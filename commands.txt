@@ -124,3 +124,5 @@ zip src.zip __init__.py rules/* db/*
 export SPARK_KAFKA_VERSION=0.10
 spark-submit --py-files src.zip --files uszipsv.csv --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 driver.py
 spark-submit --py-files copy_to_hbase.py read_new_trans.py
+
+---------------------------------------------------------------------------------------------------------------------

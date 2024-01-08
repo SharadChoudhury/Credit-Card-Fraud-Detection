@@ -1,5 +1,5 @@
 from datetime import datetime
-from src.db import dao, geo_map
+from db import dao, geo_map
 
 
 class verifyRules():

@@ -3,6 +3,8 @@ from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from db import dao
 from rules import verify_rules 
+from copy_to_hbase import batch_insert_data
+import subprocess
 
 hbase_instance = dao.HBaseDao.get_instance()
 rules_instance = verify_rules.verifyRules.get_instance()
@@ -21,7 +23,6 @@ lines = spark \
     .option("kafka.bootstrap.servers", "18.211.252.152:9092") \
     .option("subscribe", "transactions-topic-verified") \
     .option("startingOffsets", "earliest") \
-    .option("maxOffsetsPerTrigger", 2000) \
     .load()
 
 # set schema for stream
@@ -44,11 +45,21 @@ parsed_trans = lines.selectExpr("cast(value as string) as json_value") \
 status_udf = udf(rules_instance.rule_check, StringType())
 
 # apply the udf on each row in the stream, and create a new column status
-status_df = parsed_trans.withColumn("status", status_udf("card_id", "amount", "postcode", "transaction_dt"))
+status_df = parsed_trans.filter("card_id is not null") \
+    .withColumn("status", status_udf("card_id", "amount", "postcode", "transaction_dt"))
+
+
+# Write to Console
+query1 = status_df \
+    .writeStream \
+    .outputMode("append") \
+    .format("console") \
+    .option("truncate", "false") \
+    .start() 
 
 
 # Write to CSV
-query = status_df \
+query2 = status_df \
     .writeStream \
     .format("csv") \
     .option("path", "/user/hadoop/new_trans") \
@@ -56,8 +67,5 @@ query = status_df \
     .option("checkpointLocation", "/user/hadoop/checkpoint") \
     .outputMode("append") \
     .start()
-
-query.awaitTermination()
-
-
+query2.awaitTermination()
 

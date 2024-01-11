@@ -46,26 +46,16 @@ status_udf = udf(rules_instance.rule_check, StringType())
 
 # apply the udf on each row in the stream, and create a new column status
 status_df = parsed_trans.filter("card_id is not null") \
-    .withColumn("status", status_udf("card_id", "amount", "postcode", "transaction_dt"))
+    .withColumn("status", status_udf('card_id','member_id','amount','postcode','pos_id','transaction_dt'))
 
 
 # Write to Console
-query1 = status_df \
+query = status_df \
     .writeStream \
     .outputMode("append") \
     .format("console") \
     .option("truncate", "false") \
     .start() 
 
-
-# Write to CSV
-query2 = status_df \
-    .writeStream \
-    .format("csv") \
-    .option("path", "/user/hadoop/new_trans") \
-    .option("header", True) \
-    .option("checkpointLocation", "/user/hadoop/checkpoint") \
-    .outputMode("append") \
-    .start()
-query2.awaitTermination()
+query.awaitTermination()
 

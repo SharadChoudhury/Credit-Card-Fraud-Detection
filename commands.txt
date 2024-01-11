@@ -96,53 +96,28 @@ Records from 12-02-2018 in kafka
 1000 rows per batch :
 .option("maxOffsetsPerTrigger", 1000) \
 
-
-# write the transactions to card_transcations table in HBase
-# def write_to_hbase(batch_df, batch_id):
-#     batch_df \
-#     .foreach(lambda row: hbase_instance.write_data(
-#         f"{row.card_id}_{row.amount}_{row.transaction_dt}".encode(),
-#         {   b'cf1:member_id': row.member_id.encode(), 
-#             b'cf1:postcode': row.postcode.encode(),
-#             b'cf1:pos_id': row.pos_id.encode(), 
-#             b'cf1:status': row.status.encode()
-#         },
-#         'card_transactions'
-#     ))
-
-# Write to Console
-# query = status_df \
-#     .writeStream \
-#     .foreachBatch(write_to_hbase) \
-#     .outputMode("append") \
-#     .format("console") \
-#     .option("truncate", "false") \
-#     .start() 
-
-def write_to_hbase(row):
-    if row:
-        local_hbase_instance = dao.HBaseDao.get_instance()
-        local_hbase_instance.write_data(
-            f"{row['card_id']}_{row['amount']}_{row['transaction_dt']}".encode(),
-            {   
-                b'cf1:member_id': str(row['member_id']).encode(), 
-                b'cf1:postcode': str(row['postcode']).encode(),
-                b'cf1:pos_id': str(row['pos_id']).encode(), 
-                b'cf1:status': str(row['status']).encode()
-            },
-            'card_transactions'
-        )
-
+# Write to CSV
+query2 = status_df \
+    .writeStream \
+    .format("csv") \
+    .option("path", "/user/hadoop/new_trans") \
+    .option("header", True) \
+    .option("checkpointLocation", "/user/hadoop/checkpoint") \
+    .outputMode("append") \
+    .start()
 
 
 Actual execution:
 unzip python.zip
 cd python/src
-zip src.zip __init__.py copy_to_hbase.py rules/* db/* 
+zip src.zip __init__.py rules/* db/* 
 
 export SPARK_KAFKA_VERSION=0.10
 spark-submit --py-files src.zip --files uszipsv.csv --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.5 driver.py
 
-python read_new_trans.py
 
 ---------------------------------------------------------------------------------------------------------------------
+
+Shortcut EMR startup:
+
+scp -i my-pair1.pem Credit-Card-Fraud-Detection/extras/{genuine_trans.csv,copy_hbase_lookup.py} hadoop@ec2-54-82-55-141.compute-1.amazonaws.com:/home/hadoop

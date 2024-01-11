@@ -74,11 +74,34 @@ class verifyRules():
             return False
         
 
-    def rule_check(self, card_id, amount, postcode, transaction_dt):
+    def rule_check(self, card_id, member_id, amount, postcode, pos_id, transaction_dt):
         if self.check_ucl(card_id, amount) and self.check_creditScore(card_id) and self.checkDistance(card_id, postcode, transaction_dt):
             # update lookup table with current postcode and transaction_dt
-            self.dao_obj.write_data(card_id.encode(), {b'cf1:last_postcode': postcode.encode(), b'cf1:last_transaction_dt': str(transaction_dt).encode()}, 'hbase_lookup_table')
+            self.dao_obj.write_data(card_id.encode(), 
+            {
+                b'cf1:last_postcode': postcode.encode(), 
+                b'cf1:last_transaction_dt': str(transaction_dt).encode()
+            }, 
+                'hbase_lookup_table')
+            # write the record to card_transactions table
+            self.dao_obj.write_data(f"{card_id}_{amount}_{transaction_dt}".encode(),
+            {   
+                b'cf1:member_id': member_id.encode(), 
+                b'cf1:postcode': postcode.encode(),
+                b'cf1:pos_id': pos_id.encode(), 
+                b'cf1:status': 'GENUINE'.encode()
+            },
+            'card_transactions')
             return 'GENUINE'
         else:
+            # write the record to card_transactions table
+            self.dao_obj.write_data(f"{card_id}_{amount}_{transaction_dt}".encode(),
+            {   
+                b'cf1:member_id': member_id.encode(), 
+                b'cf1:postcode': postcode.encode(),
+                b'cf1:pos_id': pos_id.encode(), 
+                b'cf1:status': 'FRAUD'.encode()
+            },
+            'card_transactions')
             return 'FRAUD'
 

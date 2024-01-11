@@ -36,8 +36,10 @@ class verifyRules():
 
     # Returns True if amount < UCL as per the card_id from the lookup table
     def check_ucl(self, curr_card_id, curr_amt):
+        # get data from Hbase lookup table as per this card_id
         lookup_data = self.dao_obj.get_data(curr_card_id, 'hbase_lookup_table')
         decoded_data = self.decode_items(lookup_data)
+        # compare amount with ucl from lookup
         column_family = 'cf1'
         column_qualifier = 'ucl'
         if curr_amt < float(decoded_data.get(f'{column_family}:{column_qualifier}')):
@@ -47,8 +49,10 @@ class verifyRules():
         
     # Return True if credit score of the card_id from lookup table > 200 
     def check_creditScore(self, curr_card_id):
+        # get data from Hbase lookup table as per this card_id
         lookup_data = self.dao_obj.get_data(curr_card_id, 'hbase_lookup_table')
         decoded_data = self.decode_items(lookup_data)
+        # check if credit score > 200
         column_family = 'cf1'
         column_qualifier = 'credit_score'
         if int(decoded_data.get(f'{column_family}:{column_qualifier}')) > 200:
@@ -61,11 +65,19 @@ class verifyRules():
     def checkDistance(self, curr_card_id, postcode, transaction_dt):
         lookup_data = self.dao_obj.get_data(curr_card_id, 'hbase_lookup_table')
         decoded_data = self.decode_items(lookup_data)
+
+        # fetch the latitude and longitude of current transaction postcode
         curr_lat = self.geo_obj.get_lat(postcode)
         curr_long = self.geo_obj.get_long(postcode)
+
+        # fetch the latitude and longitude of postcode of the last transaction for this card_id
         prev_lat = self.geo_obj.get_lat(decoded_data.get('cf1:last_postcode'))
         prev_long = self.geo_obj.get_long(decoded_data.get('cf1:last_postcode'))
+
+        # calculate the distance between current and last postcodes
         distance = self.geo_obj.distance(curr_lat,curr_long, prev_lat, prev_long)
+
+        # find the time difference current and last transaction
         curr_timestamp = datetime.strptime(transaction_dt, '%Y-%m-%d %H:%M:%S')
         prev_timestamp = datetime.strptime(decoded_data.get('cf1:last_transaction_dt'), '%Y-%m-%d %H:%M:%S')
         sec_diff = (curr_timestamp - prev_timestamp).total_seconds() 
@@ -77,6 +89,7 @@ class verifyRules():
             return False
         
 
+    # Classifying as GENUINE Or FRAUD and updating HBase tables
     def rule_check(self, card_id, member_id, amount, postcode, pos_id, transaction_dt):
         if self.check_ucl(card_id, amount) and self.check_creditScore(card_id) and self.checkDistance(card_id, postcode, transaction_dt):
             # update lookup table with current postcode and transaction_dt as transaction is Genuine

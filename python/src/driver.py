@@ -1,12 +1,9 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
-from db import dao
 from rules import verify_rules 
-from copy_to_hbase import batch_insert_data
-import subprocess
 
-hbase_instance = dao.HBaseDao.get_instance()
+# create instance of verifyRules to import the rule_check method
 rules_instance = verify_rules.verifyRules.get_instance()
 
 spark = SparkSession \

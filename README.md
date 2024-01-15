@@ -2,6 +2,9 @@
 
 Credit card fraud detection of real-time transaction data
 
+ ![image](https://github.com/SharadChoudhury/Credit-Card-Fraud-Detection/assets/65325622/761ba2db-8955-47ea-92e7-2d2c0e9ed190)
+
+
 **Dataset for Past cards transactions:** `card_transactions.csv`
 
 Create an AWS EMR cluster with the following services:

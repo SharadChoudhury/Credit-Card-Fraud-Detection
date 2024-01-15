@@ -2,7 +2,8 @@
 
 Credit card fraud detection of real-time transaction data
 
- ![image](https://github.com/SharadChoudhury/Credit-Card-Fraud-Detection/assets/65325622/761ba2db-8955-47ea-92e7-2d2c0e9ed190)
+![image](https://github.com/SharadChoudhury/Credit-Card-Fraud-Detection/assets/65325622/e5f8d07e-1e0b-4808-96aa-89651f67f45c)
+
 
 
 **Dataset for Past cards transactions:** `card_transactions.csv`

@@ -64,10 +64,12 @@ sqoop import \
 ```
 
 **Creating Lookup table**
+
 Copy csv file to hadoop:
 ```bash
 hadoop fs -put /home/hadoop/card_transactions.csv /user/hadoop/
 ```
+
 We'll create the lookup table which stores the following details for each unique card_id
 - Card id 
 - Upper control limit (UCL) 

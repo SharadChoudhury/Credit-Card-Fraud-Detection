@@ -1,6 +1,6 @@
 # Credit-Card-Fraud-Detection
 
-Credit card fraud detection of real-time transaction data
+In this project, I leveraged AWS, HIve, Spark and Sqoop tools to identify the fraudulent transactions in real time to mitigate financial risks and potential losses for the organization. Proactively identifying and addressing fraud also minimizes the impact on customers and preserves their trust in the business.
 
 ![image](https://github.com/SharadChoudhury/Credit-Card-Fraud-Detection/assets/65325622/e5f8d07e-1e0b-4808-96aa-89651f67f45c)
 

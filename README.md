@@ -33,6 +33,9 @@ cd mysql-connector-java-8.0.25/
 sudo cp mysql-connector-java-8.0.25.jar /usr/lib/sqoop/lib/
 ```
 
+**Upload all relevant files to EMR using scp**
+
+
 ## Batch layer tasks
 
 **Create card_transactions table in Hbase and load data in it using the csv file and happybase.**

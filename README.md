@@ -77,6 +77,7 @@ Credit card fraud detection of real-time transaction data
 2. Hive
 3. Spark
 4. Hue
+5. Sqoop
 
 **Install Happybase:**
 ```bash
